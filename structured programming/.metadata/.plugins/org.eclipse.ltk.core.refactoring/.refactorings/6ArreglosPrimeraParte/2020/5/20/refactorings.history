@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;EnteroValido.java&apos; to &apos;Obtener_entero_valido/src&apos;&#x0D;&#x0A;- Original project: &apos;6ArreglosPrimeraParte&apos;&#x0D;&#x0A;- Destination element: &apos;Obtener_entero_valido/src&apos;&#x0D;&#x0A;- Original element: &apos;EnteroValido.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=Obtener_entero_valido/src" element1="/src&lt;{EnteroValido.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1589317227569" units="1" version="1.0"/>
+</session>

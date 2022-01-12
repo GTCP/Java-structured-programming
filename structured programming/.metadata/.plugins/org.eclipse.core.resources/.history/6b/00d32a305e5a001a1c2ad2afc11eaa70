@@ -1,0 +1,138 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Locale;
+
+public class OrdenarTodaMatrizSeleccionDeSecuencias {
+	final static int MAXFILA=5;
+	final static int MAXCOL=5;
+	
+	public static void main(String [] args) {
+		int Mat[][]= {{2,5,3,8,2},{4,7,2,1,2},{8,2,2,1,5,},{1,5,7,3,2},{1,5,7,2,1}};
+		
+		imprimir_mat(Mat);
+		ordenar_matriz(Mat);
+		imprimir_mat(Mat);
+
+	}
+	
+	public static void ordenar_matriz(int Mat[][]) {
+		
+		int filabase=0;
+		int iniciobase=MAXCOL;
+		int finbase=-1;	
+		
+		int iniciomenor=0;
+		int finmenor=0;
+		int filamenor=0;
+		
+		int filanueva=0;
+		int inicionueva=0;
+		int finnueva=0;
+		
+		while(filabase<MAXFILA) {
+			
+			while((filabase<MAXFILA)&(iniciobase>=MAXCOL)) {
+				
+				iniciobase=obtener_inicio_sec(Mat,filabase,finbase+1);
+				
+				if(iniciobase>=MAXCOL) {
+					filabase++;
+					finbase=-1;
+				}
+			}
+			
+			if(filabase<MAXFILA) {
+				finbase=obtener_fin_sec(Mat,filabase,iniciobase);
+				
+				iniciomenor=iniciobase;
+				finmenor=finbase;
+				filamenor=filabase;
+	
+				finnueva=finbase;
+				inicionueva=MAXCOL;
+				filanueva=filabase;
+				
+				while(filanueva<MAXFILA) {
+					
+					while((filanueva<MAXFILA)&&(inicionueva>=MAXCOL)) {
+						inicionueva=obtener_inicio_sec(Mat,filanueva,finnueva+1);
+								
+								if(inicionueva>=MAXCOL) {
+									filanueva++;
+									finnueva=-1;
+								};
+						
+					}
+					if(filanueva<MAXFILA) {
+						finnueva=obtener_fin_sec(Mat,filanueva,inicionueva);
+						
+						if(es_menor(Mat,iniciomenor,finmenor,filamenor,inicionueva,finnueva,filanueva)) {
+							iniciomenor=inicionueva;
+							finmenor=finnueva;
+							filamenor=filanueva;
+						}
+					}
+				}
+				if((filamenor!=filabase)||(finmenor!=finbase)||(iniciomenor!=iniciobase)) {
+					intercambiar(Mat,filamenor,finmenor,iniciomenor,filabase,finbase,iniciobase);
+					
+				}
+			}
+			
+		}
+	}
+	
+	public static int obtener_inicio_sec(int mat[][],int fila,int pos) {
+		
+		while((pos<MAXCOL)&&(mat[fila][pos]==0)) {
+			pos++;
+		}
+		return pos;
+	}
+	
+	public static int obtener_fin_sec(int mat[][],int fila,int pos) {
+		while((pos<MAXCOL)&&(mat[fila][pos]!=0)) {
+			pos++;
+		}
+		return pos-1;
+	}
+	
+	public static void corrimiento_derecha() {
+		
+	}
+	
+	public static void corrimiento_izquierda() {
+		
+	}
+	
+	public static void intercambiar(int Mat[][],int filamenor,int finmenor,int iniciomenor,int filabase,int finbase,int iniciobase) {
+		
+	}
+	
+	
+	public static void imprimir_mat(int Mat[][]) {
+		for(int i=0;i<MAXFILA;i++) {
+			System.out.println("");
+			for(int j=0; j<MAXCOL;j++) {
+				System.out.print("[");
+				System.out.print(Mat[i][j]);
+				System.out.print("]");
+
+			}
+		}
+	}
+	
+	
+	public static boolean es_menor(int Mat[][],int iniciomenor,int finmenor,int filamenor,int inicionueva,int finnueva,int filanueva) {
+		
+		if() {
+			return true;
+
+		}
+		else {
+		return false;
+		}
+		
+		return false;
+	}
+	}

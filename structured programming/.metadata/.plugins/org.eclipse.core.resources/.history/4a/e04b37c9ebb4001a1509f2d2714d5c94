@@ -1,0 +1,385 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+public class TMC{
+	final static int MAXITERACIONES=2000;
+	public static void main(String[] args){	
+		
+		double t = 0.001; //TIEMPO TRANSCURRIDO
+		
+		double H = 1; //H ES LA ALTURA DEL AGUA EN EL TANQUE
+		
+		double E = 10;// CAUDAL CONSTANTE INGRESADO        
+		
+		double S = 0.1;// CAUDAL CONSTANTE SALIDA
+		
+		double A = 10; //AREA DEL TANQUE
+		
+		double C = 10; 	//C CUPO  TOTAL DE AGUA EN EL TANQUE(ALTURA MAXIMA QUE PUEDE LLEGAREL AGUA)
+
+		double K=2; //ETAPA 2)A)
+		double W=2; //ETAPA 2)B)
+		double G=0.25; //ETAPA 2)C)
+		
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Seteo de variables para primer parte: (k ,w, g no se utilizan)");
+		//setear_valores_teclado(t,E,S,A,C,H,K,W,G);
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Inicio de Primera Parte");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		primera_parte(t,E,S,A,C,H);				
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Final de Primera parte");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Setear valores de variables para segunda parte:");
+		//setear_valores_teclado(t,E,S,A,C,H,K,W,G);
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Inicio de Segunda parte");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		//segunda_parte(t,E,S,A,C,H,K,W,G);
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.println("Final de Segunda parte");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+	}	
+	public static void primera_parte(double t,double E,double S,double A,double C,double H) {
+		boolean comienzoVaciado=false;
+		boolean noSeLLeno=false;
+		int contador=0;
+		double ATR=0;
+		double volumenAgua = 0;
+		int iteraciones=0;
+		double valorMediaSegundos=0;
+		int MediaIteraciones=0;
+		double LlenadoSegundos=0;
+		int LlenadoIteraciones=0;
+		double VaciadoSegundos=0;
+		int VaciadoIteraciones=0;
+		
+		while (H < C) { //LLENA EL TANQUE
+			iteraciones++;
+			ATR = tiempo_respecto_anterior (H, E, S,tiempo_dividido_altura(t, A));
+			H = ATR;
+			volumenAgua= volumen_agua (A, H);
+			if(((C/2)<optimizar_decimales(ATR, 3))&&(contador != 1)) {
+		
+				valorMediaSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+				MediaIteraciones=iteraciones;
+				System.out.println("valorMediaSegundos:"+valorMediaSegundos);
+				System.out.println("MediaIteraciones:"+MediaIteraciones);	
+				contador = 1;	
+			}
+			if(iteraciones>=MAXITERACIONES) {
+				System.out.println("NUNCA SE LLENO,CORTO POR LIMITE DE ITERACIONES");
+				H=C;
+			}
+		}
+		if(iteraciones<MAXITERACIONES) {
+			LlenadoSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+			LlenadoIteraciones=iteraciones;
+			System.out.println("LlenadoSegundos:"+LlenadoSegundos);
+			System.out.println("LlenadoIteraciones:"+LlenadoIteraciones);
+			iteraciones=0;
+			
+			while (H > 0) { //VACIA EL TANQUE
+				iteraciones++;
+				comienzoVaciado=true;
+				ATR = tiempo_respecto_anterior (H, 0, S,tiempo_dividido_altura(t, A));
+				H = ATR;
+				volumenAgua= volumen_agua (A, H);
+			}
+			
+			VaciadoSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+			VaciadoIteraciones=(iteraciones);			
+			System.out.println("VaciadoSegundos:"+(VaciadoSegundos+LlenadoSegundos));
+			System.out.println("VaciadoIteraciones:"+((VaciadoIteraciones+LlenadoIteraciones)-1));
+			System.out.println("Cantidad de iteraciones totales:"+(LlenadoIteraciones+VaciadoIteraciones));
+		}
+	}
+	public static void setear_valores_teclado(double t,double E,double S,double A,double C,double H,double K,double W,double G) {
+		System.out.println("Ingresar Valores Validos para iniciar el programa");
+
+			do {
+			System.out.println("Ingresar tiempo transcurrido: t");
+			t=obtener_double_valido();
+			
+			System.out.println("Ingresar caudal de entrada: E");
+			E=obtener_double_valido();
+			
+			System.out.println("Ingresar caudal de salida: S");
+			S=obtener_double_valido();
+			
+			System.out.println("iNGRESAR Area del tanque: A");
+			A=obtener_double_valido();
+	
+			System.out.println("Ingresar Cupo total del agua en el tanque: C");
+			C=obtener_double_valido();
+			
+			System.out.println("Ingresar Altura del agua del tanque: H");
+			H=obtener_double_valido();
+		
+			System.out.println("Ingresar valor de K que luego sera salida en Parte2-Opcion A");
+			K=obtener_double_valido();
+	
+			System.out.println("Ingresar valor de W que luego sera salida en Parte2-Opcion B");
+			W=obtener_double_valido();
+	
+			System.out.println("Ingresar valor de G que luego sera salida en Parte2-Opcion B");
+			G=obtener_double_valido();
+			
+		}while(!((0<= H)&&(H<=C)));
+	}	
+	public static void segunda_parte(double t,double E,double S,double A,double C,double H,double K,double W,double G) {
+		char letra=' ';
+
+		//do {
+			letra=obtener_caracter_valido();
+		//while(!((letra=='a')||(letra=='A')&&(letra=='b')||(letra=='B')&&(letra=='c')||(letra=='C')));
+			switch(letra) {
+				case 'a': case 'A':segunda_parte_A(t,E,S,A,C,H,K);break;
+				case 'b': case 'B':segunda_parte_B(t,E,S,A,C,H,W);break;
+				case 'c': case 'C':segunda_parte_C(t,E,S,A,C,H,G);break;
+			}	
+	}
+	public static void segunda_parte_A(double t,double E,double S,double A,double C,double H,double K) {
+		boolean comienzoVaciado=false;
+		double ATR=0; 
+		double volumenAgua = 0;
+		int iteraciones = 0;
+		double ValorMediaSegundos=0;
+		int MediaIteraciones=0;
+		double LlenadoSegundos=0;
+		int LlenadoIteraciones=0;
+		double VaciadoSegundos=0;
+		int VaciadoIteraciones=0;
+		int contador=0;
+		double x=0.5;
+		
+		System.out.println("ENTRO A SEGUNDA PARTE A");
+		while (H < C) { //LLENA TANQUE
+		//	S=K*tiempo_transcurrido_segunda_parte(iteraciones,t);
+			S = x * H;
+			iteraciones++;
+			ATR = tiempo_respecto_anterior (H, E, S,tiempo_dividido_altura(t, A));
+			H = ATR;
+			volumenAgua= volumen_agua (A, H);
+			if(((C/2)<optimizar_decimales(ATR,3))&&(contador!=1)) {				
+				ValorMediaSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+				MediaIteraciones=iteraciones;
+				System.out.println("ValorMediaSegundos:"+ValorMediaSegundos);
+				System.out.println("MediaIteraciones:"+MediaIteraciones);				
+				contador = 1;
+			}
+			if(iteraciones>=MAXITERACIONES) {
+				System.out.println("NUNCA SE LLENO,CORTO POR LIMITE DE ITERACIONES");
+				H=C;
+			}
+		}	
+		
+		if(iteraciones<MAXITERACIONES) {
+			LlenadoSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+			LlenadoIteraciones=iteraciones;
+			System.out.println("LlenadoSegundos:"+LlenadoSegundos);
+			System.out.println("LlenadoIteraciones:"+LlenadoIteraciones);
+			iteraciones=0;	
+			
+			System.out.println("H:"+H);
+			
+			while (H > 0) { //VACIA TANQUE
+				iteraciones++;
+				//S=K*tiempo_transcurrido_segunda_parte(iteraciones,t);
+				S = x * H;
+				comienzoVaciado=true;
+				ATR = tiempo_respecto_anterior (H, 0, S,tiempo_dividido_altura(t, A));
+				H = ATR;
+				volumenAgua= volumen_agua (A, H);
+				System.out.println("ITERACION DE WHILE DE VACIADO");
+			}	
+			VaciadoSegundos=tiempo_transcurrido_segunda_parte(iteraciones,t);
+			VaciadoIteraciones=(iteraciones+1);		
+			System.out.println("VaciadoSegundos:"+(VaciadoSegundos+LlenadoSegundos));
+			System.out.println("VaciadoIteraciones:"+(VaciadoIteraciones+LlenadoIteraciones));
+			System.out.println("Cantidad de iteraciones totales:"+(LlenadoIteraciones+VaciadoIteraciones-1));
+		}
+	}
+	public static void segunda_parte_B(double t,double E,double S,double A,double C,double H,double W) {
+		boolean comienzoVaciado=false;
+		double ATR=0;
+		double volumenAgua = 0;
+		int iteraciones = 0;
+		int contador = 0;
+		double valorMediaSegundos=0;
+		int MediaIteraciones=0;
+		double LlenadoSegundos=0;
+		int LlenadoIteraciones=0;
+		double VaciadoSegundos=0;
+		int VaciadoIteraciones=0;
+	
+		while (H < C) { //LLENA TANQUE
+			S=(W*((tiempo_transcurrido_segunda_parte(iteraciones,t))*(tiempo_transcurrido_segunda_parte(iteraciones,t))));
+			iteraciones++;
+			ATR = tiempo_respecto_anterior (H, E, S,tiempo_dividido_altura(t, A));
+			H = ATR;
+			volumenAgua= volumen_agua (A, H);
+			if(((C/2) < optimizar_decimales(ATR, 3))&&(contador != 1)) {				
+				valorMediaSegundos=tiempo_transcurrido_segunda_parte(iteraciones,t);
+				MediaIteraciones=iteraciones;
+				System.out.println("valorMediaSegundos:"+valorMediaSegundos);
+				System.out.println("MediaIteraciones:"+MediaIteraciones);				
+				contador = 1;
+			}
+			if(iteraciones>=MAXITERACIONES) {
+				System.out.println("NUNCA SE LLENO,CORTO POR LIMITE DE ITERACIONES");
+				H=C;
+			}
+		}	
+		
+		if(iteraciones<MAXITERACIONES) {
+
+			iteraciones++;
+			LlenadoSegundos=tiempo_transcurrido_segunda_parte(iteraciones,t);
+			LlenadoIteraciones=iteraciones;
+			System.out.println("LlenadoSegundos:"+LlenadoSegundos);
+			System.out.println("LlenadoIteraciones:"+LlenadoIteraciones);
+			iteraciones=0;	
+		
+			while (H > 0) { //VACIA TANQUE
+				iteraciones++;
+				S=W*(tiempo_transcurrido_segunda_parte(iteraciones,t)*tiempo_transcurrido_segunda_parte(iteraciones,t));
+				ATR = tiempo_respecto_anterior (H, 0, S,tiempo_dividido_altura(t, A));
+				H = ATR;
+				volumenAgua= volumen_agua (A, H);
+			}
+			iteraciones++;
+			VaciadoSegundos=tiempo_transcurrido_segunda_parte(iteraciones,t);
+			VaciadoIteraciones=(iteraciones);		
+			System.out.println("VaciadoSegundos:"+VaciadoSegundos);
+			System.out.println("VaciadoIteraciones:"+(VaciadoIteraciones));
+			System.out.println("Cantidad de iteraciones totales:"+(VaciadoIteraciones+LlenadoIteraciones));
+		}
+	}
+	public static void segunda_parte_C(double t,double E,double S,double A,double C,double H,double G ) {
+		boolean comienzoVaciado=false;
+		double ATR=0;
+		double volumenAgua = 0;
+		int iteraciones = 0;
+		int contador = 0;
+		double valorMediaSegundos=0;
+		int MediaIteraciones=0;
+		double LlenadoSegundos=0;
+		int LlenadoIteraciones=0;
+		double VaciadoSegundos=0;
+		int VaciadoIteraciones=0;
+		double x=0.5;
+		while (H < C) { //LLENA EL TANQUE
+			//S=G/A*(H);
+			S = x * H;
+			iteraciones++;
+			ATR = tiempo_respecto_anterior (H, E, S,tiempo_dividido_altura(t, A));
+			H = ATR;
+			volumenAgua= volumen_agua (A, H);
+			
+			if(((C/2)<optimizar_decimales(ATR, 3))&&(contador!=1)) {
+				valorMediaSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+				MediaIteraciones=iteraciones;
+				System.out.println("valorMediaSegundos:"+valorMediaSegundos);
+				System.out.println("MediaIteraciones:"+MediaIteraciones);	
+				contador = 1;
+			}
+			if(iteraciones>=MAXITERACIONES) {
+				System.out.println("NUNCA SE LLENO,CORTO POR LIMITE DE ITERACIONES");
+				H=C;
+			}
+		}
+		
+		if(iteraciones<MAXITERACIONES) {
+			LlenadoSegundos=tiempo_transcurrido(iteraciones,t,comienzoVaciado);
+			LlenadoIteraciones=iteraciones;
+			System.out.println("LlenadoSegundos:"+LlenadoSegundos);
+			System.out.println("LlenadoIteraciones:"+LlenadoIteraciones);
+			iteraciones=0;	
+			
+			while (H > 0) { //VACIA EL TANQUE
+				//S=G/A*(H);
+				S = x * H;
+
+				iteraciones++;
+				comienzoVaciado=true;
+				ATR = tiempo_respecto_anterior (H, 0, S,tiempo_dividido_altura(t, A));
+				H = ATR;
+				volumenAgua= volumen_agua (A, H);
+				if(H<(1/Math.pow(10, 9))) {
+					H=0;
+				}
+			}
+			VaciadoSegundos=tiempo_transcurrido_segunda_parte(iteraciones,t);
+			VaciadoIteraciones=(iteraciones);		
+			System.out.println("VaciadoSegundos:"+(VaciadoSegundos+LlenadoSegundos));
+			System.out.println("VaciadoIteraciones:"+(VaciadoIteraciones+LlenadoIteraciones));
+			System.out.println("Cantidad de iteraciones totales:"+(LlenadoIteraciones+VaciadoIteraciones+1));
+		}
+	}
+	public static double tiempo_respecto_anterior (double tiempoAnterior, double entradaActual, double salidaActual, double tiempoDivididoArea) {
+		double tiempoActual = tiempoAnterior + (entradaActual - salidaActual) * tiempoDivididoArea;
+		return tiempoActual;
+	}
+	public static double tiempo_dividido_altura (double tiempo, double Area) {
+		return tiempo/Area;
+	}
+	public static double optimizar_decimales(double valor, int decimales) {
+		return Math.round(valor * Math.pow(10, decimales)) / Math.pow(10, decimales);
+		} 
+	
+	public static double obtener_double_valido() {
+		double numero=0;
+		boolean salidaDoWhile=false;
+	
+		BufferedReader entrada=new BufferedReader(new InputStreamReader(System.in));
+	
+		do {
+			try {
+			System.out.println("Ingresa un numero:");
+			numero=Double.valueOf(entrada.readLine());
+			salidaDoWhile=true;
+			}
+			catch(Exception exc){
+			System.out.println("Error al ingresar");
+			}
+		}while(!salidaDoWhile);
+	
+		return numero;
+	}
+
+	public static char obtener_caracter_valido() {
+		char caracter=' ';
+		boolean salidaDoWhile=false;
+
+		BufferedReader entrada=new BufferedReader(new InputStreamReader(System.in));
+
+		do {
+			try {
+			System.out.println("Ingresa un caracter:");
+			caracter=entrada.readLine().charAt(0);
+			salidaDoWhile=true;
+			}
+			catch(Exception exc){
+			System.out.println("Error al ingresar");
+			}
+
+		}while(!salidaDoWhile);
+
+		return caracter;
+	}                
+	public static double tiempo_transcurrido_segunda_parte (int iteraciones, double tiempo) {
+		return iteraciones * tiempo;
+	}
+	public static double volumen_agua (double Area, double tiempoAnterior){
+		double volumenAgua = tiempoAnterior * Area;
+		return volumenAgua;
+	}
+	public static double tiempo_transcurrido (int i, double t,boolean comienzoVaciadoPrimeraParte) {
+		if(comienzoVaciadoPrimeraParte) {
+			i=i-1;			
+		}
+			
+		return i * t;
+	}
+}	

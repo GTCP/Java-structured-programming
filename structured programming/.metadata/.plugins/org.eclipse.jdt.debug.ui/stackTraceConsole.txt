@@ -1,0 +1,4 @@
+Escribir un diseño de programa que mientras que el usuario
+ingrese un caracter dígito o caracter letra minúscula,
+imprima dicho caracter, y si es caracter letra minúscula,
+imprima si es vocal o consonante.

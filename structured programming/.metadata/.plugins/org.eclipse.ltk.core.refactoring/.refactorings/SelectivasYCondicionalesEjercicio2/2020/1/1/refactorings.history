@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;EjercicioSelectivasYCondicionales2&apos; to &apos;SelectivasYCondicionalesEjercicio2&apos;&#x0D;&#x0A;- Original project: &apos;SelectivasYCondicionalesEjercicio2&apos;&#x0D;&#x0A;- Original element: &apos;EjercicioSelectivasYCondicionales2&apos;&#x0D;&#x0A;- Renamed element: &apos;SelectivasYCondicionalesEjercicio2&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;EjercicioSelectivasYCondicionales2&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{EjercicioSelectivasYCondicionales2.java[EjercicioSelectivasYCondicionales2" matchStrategy="1" name="SelectivasYCondicionalesEjercicio2" qualified="false" references="true" similarDeclarations="false" stamp="1577899257379" textual="false" version="1.0"/>
+</session>
